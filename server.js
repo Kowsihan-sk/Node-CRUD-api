@@ -1,6 +1,7 @@
 import dotenv from "dotenv";
 dotenv.config();
 import express, { json, urlencoded } from "express";
+import cors from "cors";
 
 import connectDB from "./config/db.js";
 import userRouter from "./route/userRoutes.js";
@@ -8,10 +9,12 @@ import userRouter from "./route/userRoutes.js";
 const app = express();
 const PORT = 5000 || process.env.PORT;
 
+connectDB();
+
 app.use(json());
 app.use(urlencoded({ extended: true }));
+app.use(cors());
 
-connectDB();
 
 app.get("/", (req, res) => {
     res.send("API working!");
