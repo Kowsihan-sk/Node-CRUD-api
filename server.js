@@ -7,7 +7,6 @@ import connectDB from "./config/db.js";
 import userRouter from "./route/userRoutes.js";
 
 const app = express();
-const PORT = 5000 || process.env.PORT;
 
 connectDB();
 
@@ -21,6 +20,8 @@ app.get("/", (req, res) => {
 })
 
 app.use("/api/", userRouter);
+
+const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
     console.log(`app listening on PORT : ${PORT}`);
