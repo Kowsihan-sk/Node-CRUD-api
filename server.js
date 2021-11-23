@@ -4,6 +4,7 @@ import express, { json, urlencoded } from "express";
 import cors from "cors";
 import swaggerJSDoc from "swagger-jsdoc";
 import swaggerUI, { setup } from "swagger-ui-express";
+import path from "path"
 
 import connectDB from "./config/db.js";
 import userRouter from "./route/userRoutes.js";
@@ -22,7 +23,7 @@ const options = {
         info: {
             title: "User API",
             version: "1.0.0",
-            description: "A simple Node User API"
+            description: "A Simple Node User API"
         },
         servers: [
             {
@@ -39,7 +40,8 @@ const options = {
 
 
 app.get("/", (req, res) => {
-    res.send("<h1>API working</h1>");
+    // res.send("<h1>API working</h1>");
+    res.sendFile(path.resolve() + "/home.html")
 })
 
 const specs = swaggerJSDoc(options);
