@@ -1,4 +1,4 @@
 # Node-CRUD-api
 
-Rest API 
+##A simple Node User API
 deployed at https://crud--api.herokuapp.com/

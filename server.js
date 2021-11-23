@@ -2,6 +2,8 @@ import dotenv from "dotenv";
 dotenv.config();
 import express, { json, urlencoded } from "express";
 import cors from "cors";
+import swaggerJSDoc from "swagger-jsdoc";
+import swaggerUI, { setup } from "swagger-ui-express";
 
 import connectDB from "./config/db.js";
 import userRouter from "./route/userRoutes.js";
@@ -14,12 +16,37 @@ app.use(json());
 app.use(urlencoded({ extended: true }));
 app.use(cors());
 
+const options = {
+    definition: {
+        openapi: "3.0.0",
+        info: {
+            title: "User API",
+            version: "1.0.0",
+            description: "A simple Node User API"
+        },
+        servers: [
+            {
+                url: "https://crud--api.herokuapp.com/",
+                description: "This is heroku server"
+            }, {
+                url: "http://localhost:5000/",
+                description: "This is local server"
+            }
+        ]
+    },
+    apis: ["./route/*.js"]
+};
+
 
 app.get("/", (req, res) => {
-    res.send("API working!");
+    res.send("<h1>API working</h1>");
 })
 
-app.use("/api/", userRouter);
+const specs = swaggerJSDoc(options);
+
+app.use("/api-docs", swaggerUI.serve, setup(specs));
+
+app.use("/users", userRouter);
 
 const PORT = process.env.PORT || 5000;
 

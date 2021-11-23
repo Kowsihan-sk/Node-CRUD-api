@@ -7,7 +7,7 @@ export const getUsers = async (req, res) => {
     try {
         const users = await User.find({}, 'name username');
 
-        res.json(users);
+        res.status(200).json(users);
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: error });
@@ -20,10 +20,10 @@ export const getUserByUsername = async (req, res) => {
         const user = await User.findOne({ username: req.params.un }, 'name username');
 
         if (!user) {
-            return res.status(200).json({ message: "User doesn't exist, use a different email address" });
+            return res.status(404).json({ message: "User doesn't exist, use a different username" });
         }
 
-        res.json(user);
+        res.status(200).json(user);
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: error });
@@ -38,7 +38,7 @@ export const addUser = async (req, res) => {
 
         const checkUser = await User.findOne({ username: username });
         if (checkUser) {
-            return res.status(200).json({ message: "user already exists, use a different email address" });
+            return res.status(400).json({ message: "user already exists, use a different username" });
         }
 
         const password = await bcrypt.hash(plain_password, 10);
@@ -63,7 +63,7 @@ export const updateUser = async (req, res) => {
         const user = await User.findOne({ username: user_name }).lean();
 
         if (!user) {
-            return res.status(200).json({ message: "user doen't exists, use a different email address" });
+            return res.status(404).json({ message: "user doesn't exist, use a different username" });
         }
 
         if (await bcrypt.compare(password, user.password)) {
@@ -78,7 +78,7 @@ export const updateUser = async (req, res) => {
             return res.status(200).json({ message: "user updated successfully" });
         }
 
-        res.json({ error: "Invalid username/ password" });
+        res.status(401).json({ error: "Invalid username/ password" });
 
     } catch (error) {
         console.error(error);
@@ -95,7 +95,7 @@ export const deleteUser = async (req, res) => {
         const user = await User.findOne({ username: username }).lean();
 
         if (!user) {
-            return res.status(200).json({ message: "user doen't exists, use a different email address" });
+            return res.status(404).json({ message: "user doesn't exist, use a different username" });
         }
 
         if (await bcrypt.compare(password, user.password)) {
@@ -104,7 +104,7 @@ export const deleteUser = async (req, res) => {
             return res.status(200).json({ message: "user deleted successfully" });
         }
 
-        res.json({ error: "Invalid username/ password" });
+        res.status(401).json({ error: "Invalid username/ password" });
 
     } catch (error) {
         console.error(error);
